@@ -9,17 +9,203 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    var pickerController: UIImagePickerController?
+    
+    @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var toolbar: UIToolbar!
+    
+    @IBOutlet weak var memeImageView: UIImageView!
+    @IBOutlet weak var topTextfield: UITextField!
+    @IBOutlet weak var bottomTextfield: UITextField!
+    
+    @IBOutlet weak var cameraButton: UIBarButtonItem!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
+    
+    var viewFrameIsPushedUp = false
+    
+    @IBAction func shareButtonPressed(_ sender: Any) {
+        share()
+    }
+    @IBAction func cancelButtonPressed(_ sender: Any) {
+        cancel()
+    }
+    @IBAction func cameraButtonPressed(_ sender: Any) {
+        presentPickerController()
+    }
+    @IBAction func albumButonPressed(_ sender: Any) {
+        presentPickerController(fromCamera: false)
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        pickerController = UIImagePickerController()
+        topTextfield.defaultTextAttributes = Meme.textAttributes
+        bottomTextfield.defaultTextAttributes = Meme.textAttributes
+        topTextfield.delegate = self
+        bottomTextfield.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        subscribeToKeyboardNotifications()
+        // Control sharing button
+        enableShareButton()
+        topTextfield.addTarget(self, action: #selector(enableShareButton), for: .editingChanged)
+        bottomTextfield.addTarget(self, action: #selector(enableShareButton), for: .editingChanged)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        unsubscribeFromKeyboardNotifications()
+    }
+    
+    // MARK: - Picker Controller
+    func presentPickerController(fromCamera: Bool = true) {
+        let pickerController = UIImagePickerController()
+        pickerController.delegate = self
+        pickerController.allowsEditing = false
+        pickerController.sourceType = fromCamera ? .camera : .photoLibrary
+        present(pickerController, animated: true, completion: nil)
+    }
+    
+    // MARK: - Keyboard view adjustments
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if bottomTextfield.isEditing && !viewFrameIsPushedUp {
+            viewFrameIsPushedUp = true
+            view.frame.origin.y = 0 - getKeyboardHeight(notification)
+        }
+    }
+    @objc func keyboardWillHide(_ notification:Notification) {
+        if viewFrameIsPushedUp {
+            viewFrameIsPushedUp = false
+            view.frame.origin.y = 0
+        }
+    }
+    func getKeyboardHeight(_ notification: Notification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        print("Height: \(keyboardSize.cgRectValue.height)")
+        return keyboardSize.cgRectValue.height
+    }
+    func subscribeToKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+    }
+    func unsubscribeFromKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    // MARK: Sharing
+    
+    func generateMemedImage() -> UIImage {
+        // Hide navigation bar and toolbar
+        navigationBar.isHidden = true
+        toolbar.isHidden = true
+        
+        // Render view to an image
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        // Show navigation bar and toolbar
+        navigationBar.isHidden = false
+        toolbar.isHidden = false
+        
+        return memedImage
+    }
+    
+    func share() {
+        // Share the image
+        let memedImage = generateMemedImage()
+        let activityViewController = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
+        activityViewController.completionWithItemsHandler = { activity, success, items, error in
+            if success {
+                self.save()
+                let alert = UIAlertController(title: "Success", message: "We saved your meme to your photo library", preferredStyle: .alert)
+                let action = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+        present(activityViewController, animated: true, completion: nil)
+        
+    }
+    
+    func save() {
+        guard let image = memeImageView.image else {
+            return
+        }
+        let memedImage = generateMemedImage()
+        let meme = Meme(topText: topTextfield.text!, bottomText: bottomTextfield.text!, originalImage: image, memedImage: memedImage)
+        // TODO: Save image to parent table/collection view
+        print("Meme saved: (\(meme.topText), \(meme.bottomText))")
+    }
+    
+    func cancel() {
+        topTextfield.text = "TOP"
+        bottomTextfield.text = "BOTTOM"
+        memeImageView.image = nil
+        view.endEditing(true)
+        enableShareButton()
+    }
+    
+    @objc func enableShareButton() {
+        shareButton.isEnabled = (!topTextfield.text!.isEmpty &&
+                                 topTextfield.text != "TOP" &&
+                                 !bottomTextfield.text!.isEmpty &&
+                                 bottomTextfield.text != "BOTTOM" &&
+                                 memeImageView.image != nil)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            memeImageView.image = image
+            enableShareButton()
+        }
+        dismiss(animated: true, completion: nil)
+    }
+}
 
-
+extension ViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == topTextfield {
+            if textField.text?.isEmpty ?? false {
+                textField.text = "TOP"
+            }
+        } else if textField == bottomTextfield {
+            if textField.text?.isEmpty ?? false {
+                textField.text = "BOTTOM"
+            }
+        }
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == topTextfield {
+            if textField.text == "TOP" {
+                textField.text = ""
+            }
+        } else if textField == bottomTextfield {
+            if textField.text == "BOTTOM" {
+                textField.text = ""
+            }
+        }
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return true
+    }
 }
 
