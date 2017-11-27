@@ -45,27 +45,30 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pickerController = UIImagePickerController()
-        topTextfield.defaultTextAttributes = Meme.textAttributes
-        bottomTextfield.defaultTextAttributes = Meme.textAttributes
-        topTextfield.delegate = self
-        bottomTextfield.delegate = self
+        setUpTextfields()
         setUpInputs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        setUpCameraIsEnabled()
         subscribeToKeyboardNotifications()
-        // Control sharing button
         enableShareButton()
-        topTextfield.addTarget(self, action: #selector(enableShareButton), for: .editingChanged)
-        bottomTextfield.addTarget(self, action: #selector(enableShareButton), for: .editingChanged)
+        setUpTextfieldTargets()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         unsubscribeFromKeyboardNotifications()
+    }
+    
+    // MARK: Preparing Initial load
+    
+    func setUpTextfields() {
+        topTextfield.defaultTextAttributes = Meme.textAttributes
+        bottomTextfield.defaultTextAttributes = Meme.textAttributes
+        topTextfield.delegate = self
+        bottomTextfield.delegate = self
     }
     
     func setUpInputs() {
@@ -75,7 +78,17 @@ class ViewController: UIViewController {
         memeImageView.image = meme.originalImage
     }
     
+    func setUpTextfieldTargets() {
+        topTextfield.addTarget(self, action: #selector(enableShareButton), for: .editingChanged)
+        bottomTextfield.addTarget(self, action: #selector(enableShareButton), for: .editingChanged)
+    }
+    
+    func setUpCameraIsEnabled() {
+        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+    }
+    
     // MARK: - Picker Controller
+    
     func presentPickerController(fromCamera: Bool = true) {
         let pickerController = UIImagePickerController()
         pickerController.delegate = self
@@ -85,6 +98,7 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Keyboard view adjustments
+    
     @objc func keyboardWillShow(_ notification:Notification) {
         if bottomTextfield.isEditing && !viewFrameIsPushedUp {
             viewFrameIsPushedUp = true
