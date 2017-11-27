@@ -20,7 +20,7 @@ class DetailViewController: UIViewController {
     }
     
     @objc func editMeme() {
-        let viewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewControllerID") as! ViewController
+        let viewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewControllerID") as! MemeEditorViewController
         viewController.meme = meme
         present(viewController, animated: true, completion: nil)
     }

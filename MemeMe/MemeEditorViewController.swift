@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MemeEditorViewController: UIViewController {
     
     var meme: Meme?
     
@@ -45,7 +45,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpTextfields()
+        setUp(topTextfield)
+        setUp(bottomTextfield)
         setUpInputs()
     }
     
@@ -64,12 +65,11 @@ class ViewController: UIViewController {
     
     // MARK: Preparing Initial load
     
-    func setUpTextfields() {
-        topTextfield.defaultTextAttributes = Meme.textAttributes
-        bottomTextfield.defaultTextAttributes = Meme.textAttributes
-        topTextfield.delegate = self
-        bottomTextfield.delegate = self
+    func setUp(_ textfield: UITextField) {
+        textfield.defaultTextAttributes = Meme.textAttributes
+        textfield.delegate = self
     }
+    
     
     func setUpInputs() {
         guard let meme = meme else { return }
@@ -195,7 +195,7 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension MemeEditorViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
@@ -208,7 +208,7 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     }
 }
 
-extension ViewController: UITextFieldDelegate {
+extension MemeEditorViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == topTextfield {
             if textField.text?.isEmpty ?? false {
