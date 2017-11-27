@@ -9,18 +9,21 @@
 import UIKit
 
 class DetailViewController: UIViewController {
-
+    
+    var meme: Meme!
+    @IBOutlet weak var memeImageView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editMeme))
+        memeImageView.image = meme.memedImage
     }
     
+    @objc func editMeme() {
+        let viewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewControllerID") as! ViewController
+        viewController.meme = meme
+        present(viewController, animated: true, completion: nil)
+    }
 
     /*
     // MARK: - Navigation

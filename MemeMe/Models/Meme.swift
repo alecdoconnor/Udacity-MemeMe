@@ -21,4 +21,10 @@ struct Meme {
         NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
         NSAttributedStringKey.strokeWidth.rawValue: -2.0]
     
+    static let condensedTextAttributes: [NSAttributedStringKey: Any] = [
+        NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 25)!,
+        NSAttributedStringKey.strokeColor: UIColor.black,
+        NSAttributedStringKey.foregroundColor: UIColor.white,
+        NSAttributedStringKey.strokeWidth: -1.0]
+    
 }

@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    var meme: Meme?
+    
     var pickerController: UIImagePickerController?
     
     @IBOutlet weak var navigationBar: UINavigationBar!
@@ -48,6 +50,7 @@ class ViewController: UIViewController {
         bottomTextfield.defaultTextAttributes = Meme.textAttributes
         topTextfield.delegate = self
         bottomTextfield.delegate = self
+        setUpInputs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,6 +66,13 @@ class ViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         unsubscribeFromKeyboardNotifications()
+    }
+    
+    func setUpInputs() {
+        guard let meme = meme else { return }
+        topTextfield.text = meme.topText
+        bottomTextfield.text = meme.bottomText
+        memeImageView.image = meme.originalImage
     }
     
     // MARK: - Picker Controller
@@ -124,15 +134,17 @@ class ViewController: UIViewController {
     
     func share() {
         // Share the image
+        guard let image = memeImageView.image else {
+            return
+        }
         let memedImage = generateMemedImage()
+        meme = Meme(topText: topTextfield.text!, bottomText: bottomTextfield.text!, originalImage: image, memedImage: memedImage)
+        
         let activityViewController = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
         activityViewController.completionWithItemsHandler = { activity, success, items, error in
             if success {
                 self.save()
-                let alert = UIAlertController(title: "Success", message: "We saved your meme to your photo library", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Okay", style: .default, handler: nil)
-                alert.addAction(action)
-                self.present(alert, animated: true, completion: nil)
+                self.alertOfSuccess()
             }
         }
         present(activityViewController, animated: true, completion: nil)
@@ -140,21 +152,23 @@ class ViewController: UIViewController {
     }
     
     func save() {
-        guard let image = memeImageView.image else {
-            return
+        // Add it to the memes array in the Application Delegate
+        guard let meme = meme else { return }
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.memes.append(meme)
+    }
+    
+    func alertOfSuccess() {
+        let alert = UIAlertController(title: "Success", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Okay", style: .default) { (_) in
+            self.dismiss(animated: true, completion: nil)
         }
-        let memedImage = generateMemedImage()
-        let meme = Meme(topText: topTextfield.text!, bottomText: bottomTextfield.text!, originalImage: image, memedImage: memedImage)
-        // TODO: Save image to parent table/collection view
-        print("Meme saved: (\(meme.topText), \(meme.bottomText))")
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
     }
     
     func cancel() {
-        topTextfield.text = "TOP"
-        bottomTextfield.text = "BOTTOM"
-        memeImageView.image = nil
-        view.endEditing(true)
-        enableShareButton()
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func enableShareButton() {

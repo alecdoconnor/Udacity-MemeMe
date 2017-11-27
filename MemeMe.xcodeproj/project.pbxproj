@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		707DA6FA1FCBAF7C00332FE0 /* MemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707DA6F91FCBAF7C00332FE0 /* MemeTableViewCell.swift */; };
+		707DA6FC1FCBAF8700332FE0 /* MemeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707DA6FB1FCBAF8700332FE0 /* MemeTableViewController.swift */; };
+		707DA6FE1FCBAF9400332FE0 /* MemeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707DA6FD1FCBAF9400332FE0 /* MemeCollectionViewController.swift */; };
+		707DA7001FCBAF9D00332FE0 /* MemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707DA6FF1FCBAF9D00332FE0 /* MemeCollectionViewCell.swift */; };
+		707DA7021FCBD24700332FE0 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707DA7011FCBD24700332FE0 /* DetailViewController.swift */; };
 		70BC43231FCB63FE00003206 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70BC43221FCB63FE00003206 /* AppDelegate.swift */; };
 		70BC43251FCB63FE00003206 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70BC43241FCB63FE00003206 /* ViewController.swift */; };
 		70BC43281FCB63FE00003206 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70BC43261FCB63FE00003206 /* Main.storyboard */; };
@@ -16,6 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		707DA6F91FCBAF7C00332FE0 /* MemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeTableViewCell.swift; sourceTree = "<group>"; };
+		707DA6FB1FCBAF8700332FE0 /* MemeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeTableViewController.swift; sourceTree = "<group>"; };
+		707DA6FD1FCBAF9400332FE0 /* MemeCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeCollectionViewController.swift; sourceTree = "<group>"; };
+		707DA6FF1FCBAF9D00332FE0 /* MemeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeCollectionViewCell.swift; sourceTree = "<group>"; };
+		707DA7011FCBD24700332FE0 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		70BC431F1FCB63FE00003206 /* MemeMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemeMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70BC43221FCB63FE00003206 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70BC43241FCB63FE00003206 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,6 +69,11 @@
 				70BC43221FCB63FE00003206 /* AppDelegate.swift */,
 				70BC43361FCB71F800003206 /* Models */,
 				70BC43241FCB63FE00003206 /* ViewController.swift */,
+				707DA6FB1FCBAF8700332FE0 /* MemeTableViewController.swift */,
+				707DA6F91FCBAF7C00332FE0 /* MemeTableViewCell.swift */,
+				707DA6FD1FCBAF9400332FE0 /* MemeCollectionViewController.swift */,
+				707DA6FF1FCBAF9D00332FE0 /* MemeCollectionViewCell.swift */,
+				707DA7011FCBD24700332FE0 /* DetailViewController.swift */,
 				70BC43261FCB63FE00003206 /* Main.storyboard */,
 				70BC43291FCB63FE00003206 /* Assets.xcassets */,
 				70BC432B1FCB63FE00003206 /* LaunchScreen.storyboard */,
@@ -148,8 +163,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				70BC43351FCB6DD300003206 /* Meme.swift in Sources */,
+				707DA6FA1FCBAF7C00332FE0 /* MemeTableViewCell.swift in Sources */,
 				70BC43251FCB63FE00003206 /* ViewController.swift in Sources */,
+				707DA6FC1FCBAF8700332FE0 /* MemeTableViewController.swift in Sources */,
+				707DA7001FCBAF9D00332FE0 /* MemeCollectionViewCell.swift in Sources */,
+				707DA6FE1FCBAF9400332FE0 /* MemeCollectionViewController.swift in Sources */,
 				70BC43231FCB63FE00003206 /* AppDelegate.swift in Sources */,
+				707DA7021FCBD24700332FE0 /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
