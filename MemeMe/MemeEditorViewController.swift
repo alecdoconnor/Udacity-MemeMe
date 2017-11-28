@@ -76,6 +76,7 @@ class MemeEditorViewController: UIViewController {
         topTextfield.text = meme.topText
         bottomTextfield.text = meme.bottomText
         memeImageView.image = meme.originalImage
+        memeImageView.contentMode = .AspectFit
     }
     
     func setUpTextfieldTargets() {
