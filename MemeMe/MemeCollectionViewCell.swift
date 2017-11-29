@@ -27,7 +27,7 @@ class MemeCollectionViewCell: UICollectionViewCell {
         
         topLabel.attributedText = topString
         bottomLabel.attributedText = bottomString
-        memeImageView.contentMode = .AspectFit
+        memeImageView.contentMode = .scaleAspectFit
         memeImageView.image = meme?.originalImage ?? UIImage()
     }
     

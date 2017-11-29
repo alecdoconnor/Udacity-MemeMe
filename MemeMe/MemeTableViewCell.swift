@@ -24,7 +24,7 @@ class MemeTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        memeImageView.contentMode = .AspectFit
+        memeImageView.contentMode = .scaleAspectFit
     }
     
     func updateCell() {

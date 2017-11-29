@@ -67,6 +67,7 @@ class MemeEditorViewController: UIViewController {
     
     func setUp(_ textfield: UITextField) {
         textfield.defaultTextAttributes = Meme.textAttributes
+        textfield.textAlignment = .center
         textfield.delegate = self
     }
     
@@ -76,7 +77,7 @@ class MemeEditorViewController: UIViewController {
         topTextfield.text = meme.topText
         bottomTextfield.text = meme.bottomText
         memeImageView.image = meme.originalImage
-        memeImageView.contentMode = .AspectFit
+        memeImageView.contentMode = .scaleAspectFit
     }
     
     func setUpTextfieldTargets() {

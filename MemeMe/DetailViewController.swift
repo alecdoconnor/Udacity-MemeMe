@@ -16,7 +16,7 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editMeme))
-        memeImageView.contentMode = .AspectFit
+        memeImageView.contentMode = .scaleAspectFit
         memeImageView.image = meme.memedImage
     }
     
